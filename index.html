@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Indian Tax Compliance Verification | AI Truth-Table Model Checking</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --primary: #38bdf8;
+      --success-bg: rgba(34, 197, 94, 0.15);
+      --success-border: #22c55e;
+      --danger-bg: rgba(239, 68, 68, 0.15);
+      --danger-border: #ef4444;
+    }
+    * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 { margin: 0 0 0.5rem; color: var(--primary); font-size: 1.8rem; }
+    header p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+    .badge {
+      display: inline-block;
+      background: #1e293b;
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      margin-top: 0.75rem;
+      color: #cbd5e1;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .card h2 { margin-top: 0; font-size: 1.15rem; color: var(--primary); }
+    .control-group { margin-bottom: 1rem; }
+    label { display: block; font-size: 0.9rem; margin-bottom: 0.35rem; color: #e2e8f0; }
+    select {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #0f172a;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .result-box {
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid;
+      margin-bottom: 1rem;
+    }
+    .entailed { background: var(--success-bg); border-color: var(--success-border); }
+    .not-entailed { background: var(--danger-bg); border-color: var(--danger-border); }
+    .result-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.25rem; }
+    .proof { font-family: monospace; font-size: 0.9rem; color: #cbd5e1; }
+    ul.reasons { margin: 0.5rem 0 0; padding-left: 1.2rem; font-size: 0.9rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+      font-family: monospace;
+      font-size: 0.95rem;
+    }
+    th, td {
+      padding: 0.65rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    th { background: #0f172a; color: var(--primary); }
+    tr.row-valid { background: rgba(34, 197, 94, 0.12); }
+    tr.row-counter { background: rgba(239, 68, 68, 0.2); font-weight: bold; }
+    .footer-note {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #1e293b;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Indian Tax Compliance Verification</h1>
+      <p>Propositional Logic & Truth-Table Model Checking (KB &models; REF)</p>
+      <div class="badge">Microporject</div>
+    </header>
+
+    <div class="grid">
+      <!-- Input Portal -->
+      <div class="card">
+        <h2>1. Taxpayer Facts & Rules Portal</h2>
+        <div class="control-group">
+          <label for="itrInput">Has the taxpayer filed the ITR? (Fact: ITR)</label>
+          <select id="itrInput" onchange="evaluateModel()">
+            <option value="true" selected>Yes (True)</option>
+            <option value="false">No (False)</option>
+            <option value="unknown">Unknown (Not Specified)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="tdsInput">Is there excess TDS deducted? (Fact: TDS)</label>
+          <select id="tdsInput" onchange="evaluateModel()">
+            <option value="unknown" selected>Unknown (Infer via Rules)</option>
+            <option value="true">Yes (True)</option>
+            <option value="false">No (False)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="rule1Input">Rule 1: ITR &rarr; TDS (Filing implies TDS check)</label>
+          <select id="rule1Input" onchange="evaluateModel()">
+            <option value="true" selected>Active (ON)</option>
+            <option value="false">Disabled (OFF)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="rule2Input">Rule 2: TDS &rarr; REF (Excess TDS implies Refund)</label>
+          <select id="rule2Input" onchange="evaluateModel()">
+            <option value="true" selected>Active (ON)</option>
+            <option value="false">Disabled (OFF)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Verification Output -->
+      <div class="card">
+        <h2>2. Verification & Entailment Report</h2>
+        <div id="statusBox" class="result-box entailed">
+          <div id="statusTitle" class="result-title">Status: CLAIM APPROVED / ENTAILED</div>
+          <div id="proofText" class="proof">Mathematical Proof: KB &models; REF (True)</div>
+        </div>
+        <div id="diagnostics"></div>
+      </div>
+    </div>
+
+    <!-- Truth Table Matrix -->
+    <div class="card">
+      <h2>3. Generated Compliance Truth Table Matrix (2³ = 8 Models)</h2>
+      <p style="font-size: 0.88rem; color: var(--muted); margin-top: 0;">
+        Knowledge Base (KB): <code>(ITR &rarr; TDS) &and; (TDS &rarr; REF) &and; Supplied Facts</code> | Query: <code>REF</code>
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>ITR</th>
+            <th>TDS</th>
+            <th>REF</th>
+            <th>KB Valid</th>
+            <th>Query (REF)</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="truthTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="footer-note">
+      <strong>Educational Disclaimer:</strong> Developed by Rahul Shivaji Sankpal.
+    </div>
+  </div>
+
+  <script>
+    function parseVal(val) {
+      if (val === "true") return true;
+      if (val === "false") return false;
+      return null;
+    }
+
+    function evaluateModel() {
+      const userItr = parseVal(document.getElementById("itrInput").value);
+      const userTds = parseVal(document.getElementById("tdsInput").value);
+      const rule1On = document.getElementById("rule1Input").value === "true";
+      const rule2On = document.getElementById("rule2Input").value === "true";
+
+      const bools = [true, false];
+      let entailed = true;
+      let counterexample = null;
+      let validModelsCount = 0;
+      let rowsHtml = "";
+      let modelNum = 1;
+
+      for (let itr of bools) {
+        for (let tds of bools) {
+          for (let ref of bools) {
+            const r1 = rule1On ? (!itr || tds) : true;
+            const r2 = rule2On ? (!tds || ref) : true;
+            const factsMatch = (userItr === null || itr === userItr) &&
+                               (userTds === null || tds === userTds);
+
+            const kbValid = r1 && r2 && factsMatch;
+            let statusLabel = "-";
+            let rowClass = "";
+
+            if (kbValid) {
+              validModelsCount++;
+              if (!ref) {
+                entailed = false;
+                if (!counterexample) counterexample = { itr, tds, ref };
+                statusLabel = "Counterexample";
+                rowClass = "row-counter";
+              } else {
+                statusLabel = "Valid Model";
+                rowClass = "row-valid";
+              }
+            }
+
+            rowsHtml += `
+              <tr class="${rowClass}">
+                <td>0${modelNum++}</td>
+                <td>${itr ? "True" : "False"}</td>
+                <td>${tds ? "True" : "False"}</td>
+                <td>${ref ? "True" : "False"}</td>
+                <td>${kbValid ? "True" : "False"}</td>
+                <td>${ref ? "True" : "False"}</td>
+                <td>${statusLabel}</td>
+              </tr>
+            `;
+          }
+        }
+      }
+
+      document.getElementById("truthTableBody").innerHTML = rowsHtml;
+
+      const statusBox = document.getElementById("statusBox");
+      const statusTitle = document.getElementById("statusTitle");
+      const proofText = document.getElementById("proofText");
+      const diagnostics = document.getElementById("diagnostics");
+
+      if (validModelsCount === 0) {
+        entailed = false;
+      }
+
+      if (entailed) {
+        statusBox.className = "result-box entailed";
+        statusTitle.textContent = "Status: CLAIM APPROVED / ENTAILED";
+        proofText.innerHTML = "Mathematical Proof: KB &models; REF (True)";
+        diagnostics.innerHTML = `<p style="font-size:0.9rem; color:#cbd5e1;">In all ${validModelsCount} model(s) where the Knowledge Base holds True, <strong>REF is True</strong>. Thus, a tax refund logically follows.</p>`;
+      } else {
+        statusBox.className = "result-box not-entailed";
+        statusTitle.textContent = "Status: CLAIM REJECTED / NOT ENTAILED";
+        proofText.innerHTML = "Mathematical Proof: KB &nvDash; REF (False)";
+
+        let reasons = [];
+        if (validModelsCount === 0) {
